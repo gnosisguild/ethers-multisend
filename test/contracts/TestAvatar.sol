@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.8.0;
 
+import "hardhat/console.sol";
+
 contract TestAvatar {
     address public module;
 
@@ -36,5 +38,6 @@ contract TestAvatar {
         // if (msg.sender != module) revert NotAuthorized(msg.sender);
         if (operation == 1) (success, ) = to.delegatecall(data);
         else (success, ) = to.call{value: value}(data);
+        console.log('success: %s', success); // WTF?! without this line the test will fail
     }
 }

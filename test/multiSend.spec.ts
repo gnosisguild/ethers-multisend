@@ -67,7 +67,8 @@ describe('encodeMultiSend', () => {
         moduleTx.to,
         moduleTx.value,
         moduleTx.data,
-        moduleTx.operation
+        moduleTx.operation,
+        { from: sender.address }
       )
 
     await expect(exec).to.changeEtherBalances(
@@ -76,14 +77,14 @@ describe('encodeMultiSend', () => {
     )
   })
 
-  it('should transfer ETH to multiple accounts (MultiSender)', async () => {
+  it.only('should transfer ETH to multiple accounts (MultiSender)', async () => {
     const multiSender = new MultiSender(
       testAvatarContract.address,
       multiSendContract.address,
       sender
     )
-    const exec = async () =>
-      await multiSender.multiSend([
+    const exec = async () => {
+      const res = await multiSender.multiSend([
         {
           to: firstRecipient.address,
           value: BigNumber.from(10).pow(18),
@@ -93,6 +94,9 @@ describe('encodeMultiSend', () => {
           value: BigNumber.from(10).pow(18).mul(2),
         },
       ])
+      console.log(res)
+      return res
+    }
 
     await expect(exec).to.changeEtherBalances(
       [firstRecipient, secondRecipient],
