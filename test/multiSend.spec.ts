@@ -27,7 +27,7 @@ import { MultiSend, TestAvatar } from '../typechain'
 //   }
 // })
 
-describe('encodeMultiSend', () => {
+describe('multiSend', () => {
   const [sender, firstRecipient, secondRecipient] = waffle.provider.getWallets()
   let testAvatarContract: TestAvatar
   let multiSendContract: MultiSend
@@ -47,35 +47,35 @@ describe('encodeMultiSend', () => {
     })
   })
 
-  it('should transfer ETH to multiple accounts', async () => {
-    const moduleTx = encodeMultiSend(
-      [
-        {
-          to: firstRecipient.address,
-          value: BigNumber.from(10).pow(18),
-        },
-        {
-          to: secondRecipient.address,
-          value: BigNumber.from(10).pow(18).mul(2),
-        },
-      ],
-      multiSendContract.address
-    )
+  // it('should transfer ETH to multiple accounts', async () => {
+  //   const moduleTx = encodeMultiSend(
+  //     [
+  //       {
+  //         to: firstRecipient.address,
+  //         value: BigNumber.from(10).pow(18),
+  //       },
+  //       {
+  //         to: secondRecipient.address,
+  //         value: BigNumber.from(10).pow(18).mul(2),
+  //       },
+  //     ],
+  //     multiSendContract.address
+  //   )
 
-    const exec = async () =>
-      await testAvatarContract.execTransactionFromModule(
-        moduleTx.to,
-        moduleTx.value,
-        moduleTx.data,
-        moduleTx.operation,
-        { from: sender.address }
-      )
+  //   const exec = async () =>
+  //     await testAvatarContract.execTransactionFromModule(
+  //       moduleTx.to,
+  //       moduleTx.value,
+  //       moduleTx.data,
+  //       moduleTx.operation,
+  //       { from: sender.address }
+  //     )
 
-    await expect(exec).to.changeEtherBalances(
-      [firstRecipient, secondRecipient],
-      [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
-    )
-  })
+  //   await expect(exec).to.changeEtherBalances(
+  //     [firstRecipient, secondRecipient],
+  //     [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+  //   )
+  // })
 
   it.only('should transfer ETH to multiple accounts (MultiSender)', async () => {
     const multiSender = new MultiSender(
