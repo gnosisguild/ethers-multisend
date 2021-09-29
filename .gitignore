@@ -1,4 +1,9 @@
 build
 node_modules
 coverage
+cache
+artifacts
+typechain
+
 *.log
+.env

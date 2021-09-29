@@ -1,0 +1,6 @@
+{
+  "spec": ["test/**/*.spec.ts"],
+  "watchFiles": ["src/**/*.ts", "test/**/*.spec.ts"],
+  "require": "ts-node/register/files",
+  "timeout": 20000
+}

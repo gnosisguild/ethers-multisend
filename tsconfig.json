@@ -2,8 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2017",
-    "outDir": "build/main",
-    "rootDir": "src",
+    "outDir": "build/test",
     "moduleResolution": "node",
     "module": "commonjs",
     "declaration": true,
@@ -22,7 +21,6 @@
     // "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
 
     /* Additional Checks */
-    "noUnusedLocals": true /* Report errors on unused locals. */,
     "noUnusedParameters": true /* Report errors on unused parameters. */,
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
@@ -41,7 +39,7 @@
     "types": [],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules/**"],
+  "files": ["src/index.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "hardhat.config.ts", "typechain"],
   "compileOnSave": false
 }
