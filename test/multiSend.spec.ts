@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { BigNumber } from 'ethers'
 import { ethers, waffle } from 'hardhat'
+import { Operation } from '../src'
 
 import { encodeMultiSend, MultiSender } from '../src/multiSend'
 import { MultiSend, TestAvatar, TestToken } from '../typechain'
@@ -123,9 +124,78 @@ describe('multiSend', () => {
       )
     })
 
-    it('should allow to do delegate calls')
-    it(
-      'should not do a multiSend transaction when passing a single transaction but execute it directly'
-    )
+    it('should allow to do delegate calls', async () => {
+      const multiSender = new MultiSender(
+        testAvatarContract.address,
+        multiSendContract.address,
+        sender
+      )
+
+      // Do an extra multi-call wrapping to get an example delegatecall transaction
+      const wrappedTx = encodeMultiSend(
+        [
+          {
+            to: firstRecipient.address,
+            value: BigNumber.from(10).pow(18),
+          },
+        ],
+        multiSendContract.address
+      )
+      expect(wrappedTx).to.haveOwnProperty('operation', Operation.DELEGATE_CALL)
+
+      const exec = () =>
+        multiSender.multiSend([
+          wrappedTx,
+          {
+            to: secondRecipient.address,
+            value: BigNumber.from(10).pow(18).mul(2),
+          },
+        ])
+
+      await expect(exec).to.changeEtherBalances(
+        [firstRecipient, secondRecipient],
+        [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+      )
+    })
+
+    it('should not do a multiSend transaction when passing a single transaction but execute it directly', async () => {
+      // We test this in a bit of a tricky way:
+      // We pass a wrong contract address so the transaction will fail when it actually tries delegate to the MultiSend contract.
+      const defunctMultiSender = new MultiSender(
+        testAvatarContract.address,
+        '0x0000000000000000000000000000000000000000',
+        sender
+      )
+
+      // multiple transactions: delegation will fail -> no balance change
+      const execMulti = () =>
+        defunctMultiSender.multiSend([
+          {
+            to: firstRecipient.address,
+            value: BigNumber.from(10).pow(18),
+          },
+          {
+            to: secondRecipient.address,
+            value: BigNumber.from(10).pow(18).mul(2),
+          },
+        ])
+      await expect(execMulti).to.not.changeEtherBalance(
+        firstRecipient,
+        BigNumber.from(10).pow(18)
+      )
+
+      // single transactions: direct execution without delegation -> balance changes correctly
+      const execSingle = () =>
+        defunctMultiSender.multiSend([
+          {
+            to: firstRecipient.address,
+            value: BigNumber.from(10).pow(18),
+          },
+        ])
+      await expect(execSingle).to.changeEtherBalance(
+        firstRecipient,
+        BigNumber.from(10).pow(18)
+      )
+    })
   })
 })

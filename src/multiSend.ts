@@ -14,22 +14,29 @@ const AVATAR_ABI = [
 ]
 const MULTI_SEND_CONTRACT_ADDRESS = '0x8D29bE29923b68abfDD21e541b9374737B49cdAD'
 
+const coerceTransactionInput = (tx: TransactionInput): ModuleTransaction => ({
+  operation: tx.operation || Operation.CALL,
+  to: tx.to,
+  value: tx.value || BigNumber.from(0),
+  data: tx.data || '0x',
+})
+
 /// Encodes the transaction as packed bytes of:
 /// - `operation` as a `uint8` with `0` for a `call` or `1` for a `delegatecall` (=> 1 byte),
 /// - `to` as an `address` (=> 20 bytes),
 /// - `value` as a `uint256` (=> 32 bytes),
 /// -  length of `data` as a `uint256` (=> 32 bytes),
 /// - `data` as `bytes`.
-const encodePacked = (transaction: TransactionInput) => {
-  const data = transaction.data || '0x'
+const encodePacked = (transactionInput: TransactionInput) => {
+  const tx = coerceTransactionInput(transactionInput)
   return pack(
     ['uint8', 'address', 'uint256', 'uint256', 'bytes'],
     [
-      transaction.operation || Operation.CALL,
-      transaction.to,
-      transaction.value || BigNumber.from(0),
-      hexDataLength(data),
-      data,
+      tx.operation || Operation.CALL,
+      tx.to,
+      tx.value || BigNumber.from(0),
+      hexDataLength(tx.data),
+      tx.data,
     ]
   )
 }
@@ -52,9 +59,9 @@ export const encodeMultiSend = (
   ])
 
   return {
-    to: multiSendContractAddress || MULTI_SEND_CONTRACT_ADDRESS,
     operation: Operation.DELEGATE_CALL,
-    value: 0,
+    to: multiSendContractAddress || MULTI_SEND_CONTRACT_ADDRESS,
+    value: BigNumber.from(0),
     data,
   }
 }
@@ -75,10 +82,14 @@ export class MultiSender extends Contract {
     transactions: readonly TransactionInput[],
     overrides: Overrides & { readonly from?: string | Promise<string> } = {}
   ) {
-    const moduleTx = encodeMultiSend(
-      transactions,
-      this.multiSendContractAddress
-    )
+    let moduleTx: ModuleTransaction
+
+    if (transactions.length === 1) {
+      // Optimization: A single transaction doesn't need to be wrapped in a multi-send
+      moduleTx = coerceTransactionInput(transactions[0])
+    } else {
+      moduleTx = encodeMultiSend(transactions, this.multiSendContractAddress)
+    }
 
     return await this.execTransactionFromModule(
       moduleTx.to,
