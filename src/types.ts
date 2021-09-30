@@ -20,6 +20,6 @@ export type ModuleTransactionInput = {
   readonly operation?: Operation
   /** the to address */
   readonly to: string
-  readonly value: BigNumberish
+  readonly value?: BigNumberish
   readonly data?: string
 }

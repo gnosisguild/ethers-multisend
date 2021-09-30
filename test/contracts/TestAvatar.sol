@@ -36,6 +36,6 @@ contract TestAvatar {
         // if (msg.sender != module) revert NotAuthorized(msg.sender);
         if (operation == 1) (success, ) = to.delegatecall(data);
         else (success, ) = to.call{value: value}(data);
-        require(success, ''); // WTF?! without this line the test will fail
+        require(success, 'unsuccessful');
     }
 }

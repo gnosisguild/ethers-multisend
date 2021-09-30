@@ -1,36 +1,15 @@
-// import { expect } from 'chai'
-// import { BigNumber } from 'ethers'
 import { expect } from 'chai'
 import { BigNumber } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 
 import { encodeMultiSend, MultiSender } from '../src/multiSend'
-import { MultiSend, TestAvatar } from '../typechain'
-
-// const setUpTestToken = deployments.createFixture(async () => {
-//   const Token = await ethers.getContractFactory('TestToken')
-
-//   const testToken = await Token.deploy(18)
-//   const tokenOne = await Token.deploy(6)
-//   const tokenTwo = await Token.deploy(12)
-
-//   const tokensOrdered = [tokenOne.address, tokenTwo.address].sort(
-//     (a, b) => Number(a) - Number(b)
-//   )
-//   await testToken.mint(user.address, DesignatedTokenBalance)
-//   return {
-//     tokenOne,
-//     tokenTwo,
-//     Token,
-//     designatedToken,
-//     tokensOrdered,
-//   }
-// })
+import { MultiSend, TestAvatar, TestToken } from '../typechain'
 
 describe('multiSend', () => {
   const [sender, firstRecipient, secondRecipient] = waffle.provider.getWallets()
   let testAvatarContract: TestAvatar
   let multiSendContract: MultiSend
+  let testToken: TestToken
 
   before(async () => {
     // deploy contracts
@@ -40,71 +19,113 @@ describe('multiSend', () => {
     const MultiSendContract = await ethers.getContractFactory('MultiSend')
     multiSendContract = await MultiSendContract.deploy()
 
-    // fund avatar with 1000 ETH
+    const TestToken = await ethers.getContractFactory('TestToken')
+    testToken = await TestToken.deploy(18)
+
+    // fund avatar with 100 ETH and 100 TestTokens
     await sender.sendTransaction({
       value: BigNumber.from(10).pow(18).mul(100),
       to: testAvatarContract.address,
     })
-  })
-
-  // it('should transfer ETH to multiple accounts', async () => {
-  //   const moduleTx = encodeMultiSend(
-  //     [
-  //       {
-  //         to: firstRecipient.address,
-  //         value: BigNumber.from(10).pow(18),
-  //       },
-  //       {
-  //         to: secondRecipient.address,
-  //         value: BigNumber.from(10).pow(18).mul(2),
-  //       },
-  //     ],
-  //     multiSendContract.address
-  //   )
-
-  //   const exec = async () =>
-  //     await testAvatarContract.execTransactionFromModule(
-  //       moduleTx.to,
-  //       moduleTx.value,
-  //       moduleTx.data,
-  //       moduleTx.operation,
-  //       { from: sender.address }
-  //     )
-
-  //   await expect(exec).to.changeEtherBalances(
-  //     [firstRecipient, secondRecipient],
-  //     [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
-  //   )
-  // })
-
-  it.only('should transfer ETH to multiple accounts (MultiSender)', async () => {
-    const multiSender = new MultiSender(
+    await testToken.mint(
       testAvatarContract.address,
-      multiSendContract.address,
-      sender
-    )
-    const exec = async () => {
-      const res = await multiSender.multiSend([
-        {
-          to: firstRecipient.address,
-          value: BigNumber.from(10).pow(18),
-        },
-        {
-          to: secondRecipient.address,
-          value: BigNumber.from(10).pow(18).mul(2),
-        },
-      ])
-      console.log(res)
-      return res
-    }
-
-    await expect(exec).to.changeEtherBalances(
-      [firstRecipient, secondRecipient],
-      [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+      BigNumber.from(10).pow(18).mul(100)
     )
   })
 
-  it('should transfer ERC20 tokens to multiple accounts')
-  it('should do multiple arbitrary calls')
-  it('should allow to do delegate calls')
+  describe('encodeMultiSend', () => {
+    it('should return the parameters for a successful execTransactionFromModule calls', async () => {
+      const moduleTx = encodeMultiSend(
+        [
+          {
+            to: firstRecipient.address,
+            value: BigNumber.from(10).pow(18),
+          },
+          {
+            to: secondRecipient.address,
+            value: BigNumber.from(10).pow(18).mul(2),
+          },
+        ],
+        multiSendContract.address
+      )
+
+      const exec = () =>
+        testAvatarContract.execTransactionFromModule(
+          moduleTx.to,
+          moduleTx.value,
+          moduleTx.data,
+          moduleTx.operation
+        )
+
+      await expect(exec).to.changeEtherBalances(
+        [firstRecipient, secondRecipient],
+        [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+      )
+    })
+  })
+
+  describe('MultiSender', () => {
+    it('should transfer ETH to multiple accounts', async () => {
+      const multiSender = new MultiSender(
+        testAvatarContract.address,
+        multiSendContract.address,
+        sender
+      )
+      const exec = () =>
+        multiSender.multiSend([
+          {
+            to: firstRecipient.address,
+            value: BigNumber.from(10).pow(18),
+          },
+          {
+            to: secondRecipient.address,
+            value: BigNumber.from(10).pow(18).mul(2),
+          },
+        ])
+
+      await expect(exec).to.changeEtherBalances(
+        [firstRecipient, secondRecipient],
+        [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+      )
+    })
+
+    it('should transfer ERC20 tokens to multiple accounts', async () => {
+      const multiSender = new MultiSender(
+        testAvatarContract.address,
+        multiSendContract.address,
+        sender
+      )
+
+      const firstTransferData = testToken.interface.encodeFunctionData(
+        'transfer',
+        [firstRecipient.address, BigNumber.from(10).pow(18)]
+      )
+      const secondTransferData = testToken.interface.encodeFunctionData(
+        'transfer',
+        [secondRecipient.address, BigNumber.from(10).pow(18).mul(2)]
+      )
+      const exec = () =>
+        multiSender.multiSend([
+          {
+            to: testToken.address,
+            data: firstTransferData,
+          },
+          {
+            to: testToken.address,
+            data: secondTransferData,
+          },
+        ])
+
+      await expect(exec).to.changeTokenBalances(
+        testToken,
+        [firstRecipient, secondRecipient],
+        [BigNumber.from(10).pow(18), BigNumber.from(10).pow(18).mul(2)]
+      )
+    })
+
+    it('should allow to do delegate calls')
+    it(
+      'should not do a multiSend transaction when passing a single transaction but execute it directly'
+    )
+  })
 })

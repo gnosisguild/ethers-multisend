@@ -34,8 +34,7 @@ const encodePacked = (transaction: ModuleTransactionInput) => {
   )
 }
 
-const removeHexPrefix = (hexString: string) =>
-  hexString.startsWith('0x') ? hexString.substr(2) : hexString
+const remove0x = (hexString: string) => hexString.substr(2)
 
 // Encodes a batch of module transactions into a single multiSend module transaction.
 // A module transaction is an object with fields corresponding to a Gnosis Safe's (i.e., Zodiac IAvatar's) `execTransactionFromModule` method parameters.
@@ -47,7 +46,7 @@ export const encodeMultiSend = (
   const multiSendContract = new Interface(MULTI_SEND_ABI)
 
   const transactionsEncoded =
-    '0x' + transactions.map(encodePacked).map(removeHexPrefix).join('')
+    '0x' + transactions.map(encodePacked).map(remove0x).join('')
   const data = multiSendContract.encodeFunctionData('multiSend', [
     transactionsEncoded,
   ])
@@ -73,8 +72,8 @@ export class MultiSender extends Contract {
   }
 
   async multiSend(
-    transactions: readonly ModuleTransactionInput[]
-    // overrides?: Overrides & { readonly from?: string | Promise<string> }
+    transactions: readonly ModuleTransactionInput[],
+    overrides: Overrides & { readonly from?: string | Promise<string> } = {}
   ) {
     const moduleTx = encodeMultiSend(
       transactions,
@@ -85,36 +84,8 @@ export class MultiSender extends Contract {
       moduleTx.to,
       moduleTx.value,
       moduleTx.data,
-      moduleTx.operation
+      moduleTx.operation,
+      overrides
     )
   }
 }
-
-// export const multiSend = async (
-//   transactions: readonly ModuleTransactionInput[],
-//   options: EthersOverrides & {
-//     readonly avatarAddress: string
-//     readonly multiSendContractAddress?: string
-//   }
-// ) => {
-//   const { avatarAddress, ...overrides } = options
-//   // TODO: Optimization - send directly if transactions.length === 1
-
-//   const moduleTx = encodeMultiSend(transactions, options)
-
-//   const avatarContract = new Contract(avatarAddress, AVATAR_ABI)
-//   // const data = avatarContract.encodeFunctionData('execTransactionFromModule', [
-//   //   moduleTx.to,
-//   //   moduleTx.value,
-//   //   moduleTx.data,
-//   //   moduleTx.operation,
-//   // ])
-
-//   return await avatarContract.execTransactionFromModule(
-//     moduleTx.to,
-//     moduleTx.value,
-//     moduleTx.data,
-//     moduleTx.operation,
-//     overrides
-//   )
-// }
