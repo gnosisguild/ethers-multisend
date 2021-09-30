@@ -1,10 +1,7 @@
-# multisend.js
+# ethers-multisend
 
-An npm package for crafting multi-send transaction.
-
-Based on ethers.js
+An npm package for crafting multi-send transaction from a Zodiac Avatar, such as a Gnosis Safe, based on ethers.js.
 
 ## Notes and questions
 
 - Shall we support contract deployment transactions (empty `to`, contract code in `data`)?
-- Check if error free and get gas cost estimate (run with `call`)?

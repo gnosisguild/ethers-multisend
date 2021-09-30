@@ -6,7 +6,7 @@ import { hexDataLength } from '@ethersproject/bytes'
 import { Contract, Overrides } from '@ethersproject/contracts'
 import { pack } from '@ethersproject/solidity'
 
-import { ModuleTransaction, ModuleTransactionInput, Operation } from './types'
+import { ModuleTransaction, Operation, TransactionInput } from './types'
 
 const MULTI_SEND_ABI = ['function multiSend(bytes memory transactions)']
 const AVATAR_ABI = [
@@ -20,7 +20,7 @@ const MULTI_SEND_CONTRACT_ADDRESS = '0x8D29bE29923b68abfDD21e541b9374737B49cdAD'
 /// - `value` as a `uint256` (=> 32 bytes),
 /// -  length of `data` as a `uint256` (=> 32 bytes),
 /// - `data` as `bytes`.
-const encodePacked = (transaction: ModuleTransactionInput) => {
+const encodePacked = (transaction: TransactionInput) => {
   const data = transaction.data || '0x'
   return pack(
     ['uint8', 'address', 'uint256', 'uint256', 'bytes'],
@@ -40,7 +40,7 @@ const remove0x = (hexString: string) => hexString.substr(2)
 // A module transaction is an object with fields corresponding to a Gnosis Safe's (i.e., Zodiac IAvatar's) `execTransactionFromModule` method parameters.
 // For more information refer to https://docs.gnosis.io/safe/docs/contracts_details/#gnosis-safe-transactions.
 export const encodeMultiSend = (
-  transactions: readonly ModuleTransactionInput[],
+  transactions: readonly TransactionInput[],
   multiSendContractAddress: string = MULTI_SEND_CONTRACT_ADDRESS
 ): ModuleTransaction => {
   const multiSendContract = new Interface(MULTI_SEND_ABI)
@@ -72,7 +72,7 @@ export class MultiSender extends Contract {
   }
 
   async multiSend(
-    transactions: readonly ModuleTransactionInput[],
+    transactions: readonly TransactionInput[],
     overrides: Overrides & { readonly from?: string | Promise<string> } = {}
   ) {
     const moduleTx = encodeMultiSend(

@@ -1,11 +1,11 @@
 {
-  "name": "multisend",
+  "name": "ethers-multisend",
   "version": "1.0.0",
-  "description": "A package for crafting multisend transactions to be executed by Gnosis Safe",
+  "description": "A package for crafting multi-send transaction from a Zodiac Avatar, such as a Gnosis Safe, based on ethers.js",
   "main": "build/cjm/index.js",
   "typings": "build/cjm/index.d.ts",
   "module": "build/esm/index.js",
-  "repository": "git@github.com:gnosis/multisend-js.git",
+  "repository": "git@github.com:gnosis/ethers-multisend.git",
   "author": "Jan-Felix Schwarz",
   "license": "MIT",
   "private": false,
@@ -66,9 +66,11 @@
   ],
   "dependencies": {
     "@ethersproject/abi": "^5.4.1",
-    "@ethersproject/address": "^5.4.0",
+    "@ethersproject/abstract-provider": "^5.4.1",
+    "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/bignumber": "^5.4.2",
     "@ethersproject/bytes": "^5.4.0",
+    "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/solidity": "^5.4.0"
   },
   "prettier": {

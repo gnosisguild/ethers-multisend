@@ -1,25 +1,22 @@
-import { BigNumberish } from 'ethers'
+import { BigNumberish } from '@ethersproject/bignumber'
 
 export enum Operation {
   CALL = 0,
   DELEGATE_CALL = 1,
 }
 
-export type ModuleTransaction = {
-  /// `0` for `call` or `1` for `delegatecall`
-  readonly operation: Operation
-  /** the to address */
-  readonly to: string
-  readonly value: BigNumberish
-  readonly data: string
-}
-
-// A more loose variant of ModuleTransaction that allows omitting some fields for which there are sensible defaults
-export type ModuleTransactionInput = {
-  /// `0` for `call` or `1` for `delegatecall`
+// Useful for specifying a single transaction to be batched with a multi-send
+export type TransactionInput = {
   readonly operation?: Operation
-  /** the to address */
   readonly to: string
   readonly value?: BigNumberish
   readonly data?: string
+}
+
+// Provides the parameters for a Zodiac Avatar's execTransactionFromModule function
+export type ModuleTransaction = {
+  readonly operation: Operation
+  readonly to: string
+  readonly value: BigNumberish
+  readonly data: string
 }
