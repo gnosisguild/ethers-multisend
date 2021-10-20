@@ -1,7 +1,8 @@
 {
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
   "cSpell.userWords": [], // only use words from .cspell.json
   "cSpell.enabled": true,
-  "editor.formatOnSave": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.codeActionsOnSave": {
