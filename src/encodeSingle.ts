@@ -69,13 +69,13 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
     case TransactionType.callContract:
       return {
         to: tx.to,
-        value: tx.value,
+        value: tx.value || '0',
         data: encodeFunctionCall(tx),
       }
     case TransactionType.raw:
       return {
         to: tx.to,
-        value: tx.value,
+        value: tx.value || '0',
         data: tx.data || '0x',
       }
   }

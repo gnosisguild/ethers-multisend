@@ -1,4 +1,5 @@
 import { FormatTypes } from '@ethersproject/abi'
+import { hexZeroPad } from '@ethersproject/bytes'
 import { expect } from 'chai'
 import { BigNumber } from 'ethers'
 import { ethers, waffle } from 'hardhat'
@@ -120,20 +121,19 @@ describe('encodeSingle', () => {
           ['1', '2'],
           ['3', '4'],
         ],
-        tupleParam: { bytesMember: 'a', boolMember: true },
+        tupleParam: { bytesMember: hexZeroPad('0x0', 8), boolMember: true },
       },
       id: '',
     })
 
-    const exec = () =>
-      testAvatarContract.execTransactionFromModule(
-        tx.to,
-        tx.value,
-        tx.data,
-        tx.operation || 0
-      )
+    const result = testAvatarContract.execTransactionFromModule(
+      tx.to,
+      tx.value,
+      tx.data,
+      tx.operation || 0
+    )
 
-    await expect(exec).to.emit(inputsLogger, 'InputsLogged')
+    await expect(result).to.emit(inputsLogger, 'InputsLogged')
   })
 
   it('should use default values if no input value is provided as well as for unnamed function parameters', async () => {
@@ -147,21 +147,20 @@ describe('encodeSingle', () => {
       id: '',
     })
 
-    const exec = () =>
-      testAvatarContract.execTransactionFromModule(
-        tx.to,
-        tx.value,
-        tx.data,
-        tx.operation || 0
-      )
+    const result = testAvatarContract.execTransactionFromModule(
+      tx.to,
+      tx.value,
+      tx.data,
+      tx.operation || 0
+    )
 
-    await expect(exec).to.emit(inputsLogger, 'InputsLogged')
+    await expect(result).to.emit(inputsLogger, 'InputsLogged')
   })
 
   it('should encode raw transactions', async () => {
     const tx = encodeSingle({
       type: TransactionType.raw,
-      to: inputsLogger.address,
+      to: testToken.address,
       value: '',
       data: testToken.interface.encodeFunctionData('transfer', [
         recipient.address,
