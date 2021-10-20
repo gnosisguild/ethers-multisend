@@ -59,7 +59,7 @@ isValid(transactionInput: TransactionInput): boolean
 
 Returns whether the provided transaction input can be encoded into a meta transaction without errors.
 
-### Types
+## Types
 
 The `TransactionInput` type captures the information for any of the four supported transaction types.
 
