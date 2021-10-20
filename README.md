@@ -6,10 +6,10 @@ An npm package for crafting multi-send transaction from a Gnosis Safe, based on 
 
 - Easily encode the most common types of transactions from JSON inputs:
   - ETH & ERC20 token transfers
-  - NFT (collectibles) transfers
+  - NFT transfers
   - Contract function calls
   - Raw transactions
-- Encode a batch of transactions into a single `multiSend` call to the [MultiSend contract](https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/MultiSend.sol).
+- Encode a batch of transactions into a single [multi-send call](https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/MultiSend.sol).
 
 ## Installation
 
@@ -22,7 +22,7 @@ npm install --save ethers-multisend
 To install it using yarn, run:
 
 ```
-yarn add react-multisend
+yarn add ethers-multisend
 ```
 
 ## API
