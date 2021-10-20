@@ -82,4 +82,4 @@ interface MetaTransaction {
 }
 ```
 
-Find the full information about all TypeScript types here: [src/types.ts]
+Find the full information about all TypeScript types here: [src/types.ts](src/types.ts)
