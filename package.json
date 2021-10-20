@@ -60,10 +60,9 @@
     "README.md"
   ],
   "dependencies": {
-    "@ethersproject/abi": "^5.4.1",
-    "@ethersproject/bignumber": "^5.4.2",
-    "@ethersproject/bytes": "^5.4.0",
-    "@ethersproject/solidity": "^5.4.0"
+    "@ethersproject/abi": "^5.0.0",
+    "@ethersproject/bytes": "^5.0.0",
+    "@ethersproject/solidity": "^5.0.0"
   },
   "prettier": {
     "semi": false,
