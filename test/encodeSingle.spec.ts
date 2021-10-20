@@ -1,26 +1,31 @@
+import { FormatTypes } from '@ethersproject/abi'
 import { expect } from 'chai'
 import { BigNumber } from 'ethers'
 import { ethers, waffle } from 'hardhat'
 
 import { encodeSingle, TransactionType } from '../src'
-import { TestAvatar, TestNft, TestToken } from '../typechain'
+import { InputsLogger, TestAvatar, TestNft, TestToken } from '../typechain'
 
 describe('encodeSingle', () => {
   const [sender, recipient] = waffle.provider.getWallets()
   let testAvatarContract: TestAvatar
   let testToken: TestToken
   let testNft: TestNft
+  let inputsLogger: InputsLogger
 
   before(async () => {
     // deploy contracts
     const TestAvatarContract = await ethers.getContractFactory('TestAvatar')
     testAvatarContract = await TestAvatarContract.deploy()
 
-    const TestToken = await ethers.getContractFactory('TestToken')
-    testToken = await TestToken.deploy(18)
+    const TestTokenContract = await ethers.getContractFactory('TestToken')
+    testToken = await TestTokenContract.deploy(18)
 
-    const TestNft = await ethers.getContractFactory('TestNft')
-    testNft = await TestNft.deploy()
+    const TestNftContract = await ethers.getContractFactory('TestNft')
+    testNft = await TestNftContract.deploy()
+
+    const InputsLoggerContract = await ethers.getContractFactory('InputsLogger')
+    inputsLogger = await InputsLoggerContract.deploy()
 
     // fund avatar with 100 ETH, 100 TestTokens, and TestNft #123
     await sender.sendTransaction({
@@ -100,7 +105,83 @@ describe('encodeSingle', () => {
     expect(await testNft.ownerOf('123')).to.equal(recipient.address)
   })
 
-  //   it('should encode contract function calls', () => {})
-  //   it('should use default values for unnamed function parameters', () => {})
-  //   it('should encode raw transactions', () => {})
+  it('should encode contract function calls', async () => {
+    const tx = encodeSingle({
+      type: TransactionType.callContract,
+      to: inputsLogger.address,
+      abi: inputsLogger.interface.format(FormatTypes.json) as string,
+      value: '',
+      functionSignature:
+        'logInputs(string,address[2],int256[][],(bytes8,bool))',
+      inputValues: {
+        stringParam: 'test',
+        fixedSizeAddressArrayParam: [testToken.address, testNft.address],
+        int2DArrayParam: [
+          ['1', '2'],
+          ['3', '4'],
+        ],
+        tupleParam: { bytesMember: 'a', boolMember: true },
+      },
+      id: '',
+    })
+
+    const exec = () =>
+      testAvatarContract.execTransactionFromModule(
+        tx.to,
+        tx.value,
+        tx.data,
+        tx.operation || 0
+      )
+
+    await expect(exec).to.emit(inputsLogger, 'InputsLogged')
+  })
+
+  it('should use default values if no input value is provided as well as for unnamed function parameters', async () => {
+    const tx = encodeSingle({
+      type: TransactionType.callContract,
+      to: inputsLogger.address,
+      abi: inputsLogger.interface.format(FormatTypes.json) as string,
+      value: '',
+      functionSignature: 'logInputs(string,address[2])',
+      inputValues: {},
+      id: '',
+    })
+
+    const exec = () =>
+      testAvatarContract.execTransactionFromModule(
+        tx.to,
+        tx.value,
+        tx.data,
+        tx.operation || 0
+      )
+
+    await expect(exec).to.emit(inputsLogger, 'InputsLogged')
+  })
+
+  it('should encode raw transactions', async () => {
+    const tx = encodeSingle({
+      type: TransactionType.raw,
+      to: inputsLogger.address,
+      value: '',
+      data: testToken.interface.encodeFunctionData('transfer', [
+        recipient.address,
+        BigNumber.from(10).pow(18),
+      ]),
+      id: '',
+    })
+
+    const exec = () =>
+      testAvatarContract.execTransactionFromModule(
+        tx.to,
+        tx.value,
+        tx.data,
+        tx.operation || 0
+      )
+
+    await expect(exec).to.changeTokenBalance(
+      testToken,
+      recipient,
+      BigNumber.from(10).pow(18)
+    )
+  })
 })

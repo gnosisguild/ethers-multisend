@@ -4,7 +4,7 @@ An npm package for crafting multi-send transaction from a Gnosis Safe, based on 
 
 ## Features
 
-- Easily encode the most common transaction types from JSON inputs:
+- Easily encode the most common types of transactions from JSON inputs:
   - ETH & ERC20 token transfers
   - NFT (collectibles) transfers
   - Contract function calls
