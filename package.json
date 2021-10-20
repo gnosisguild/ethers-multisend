@@ -10,7 +10,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "hardhat compile",
     "prepare": "yarn build",
     "prebuild": "rimraf build",
     "build": "yarn build:cjs && yarn build:esm",
