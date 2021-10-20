@@ -61,11 +61,8 @@
   ],
   "dependencies": {
     "@ethersproject/abi": "^5.4.1",
-    "@ethersproject/abstract-provider": "^5.4.1",
-    "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/bignumber": "^5.4.2",
     "@ethersproject/bytes": "^5.4.0",
-    "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/solidity": "^5.4.0"
   },
   "prettier": {

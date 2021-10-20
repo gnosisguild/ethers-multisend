@@ -6,4 +6,3 @@ artifacts
 typechain
 
 *.log
-.env

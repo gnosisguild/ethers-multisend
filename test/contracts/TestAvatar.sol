@@ -1,12 +1,23 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.8.0;
 
-contract TestAvatar {
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+
+contract TestAvatar is IERC721Receiver {
     address public module;
 
     error NotAuthorized(address unacceptedAddress);
 
     receive() external payable {}
+
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
 
     function setModule(address _module) external {
         module = _module;

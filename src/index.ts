@@ -1,2 +1,3 @@
-export { encodeMultiSend, MultiSender } from './multiSend'
-export { Operation, TransactionInput } from './types'
+export { encodeMulti } from './encodeMulti'
+export { encodeSingle } from './encodeSingle'
+export * from './types'
