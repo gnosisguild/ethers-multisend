@@ -1,14 +1,15 @@
 import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
+import { parseEther, parseUnits } from '@ethersproject/units'
+import { BigNumber } from 'ethers'
 
 import {
   CallContractTransactionInput,
   MetaTransaction,
   TransactionInput,
   TransactionType,
+  TransferCollectibleTransactionInput,
   TransferFundsTransactionInput,
 } from './types'
-
-import { TransferCollectibleTransactionInput } from '.'
 
 const erc20Interface = new Interface([
   'function transfer(address recipient, uint256 amount) public returns (bool)',
@@ -17,7 +18,7 @@ const erc20Interface = new Interface([
 const encodeErc20Transfer = (tx: TransferFundsTransactionInput) =>
   erc20Interface.encodeFunctionData('transfer(address,uint256)', [
     tx.to,
-    tx.amount,
+    parseUnits(tx.amount, tx.decimals),
   ])
 
 const erc721Interface = new Interface([
@@ -49,7 +50,7 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
         // transfer ETH
         return {
           to: tx.to,
-          value: tx.amount,
+          value: parseEther(tx.amount).toString(),
           data: '0x',
         }
       } else {

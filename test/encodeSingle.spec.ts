@@ -45,8 +45,9 @@ describe('encodeSingle', () => {
       type: TransactionType.transferFunds,
       token: null,
       to: recipient.address,
-      amount: BigNumber.from(10).pow(18).toString(),
+      amount: '1',
       id: '',
+      decimals: 18,
     })
     const exec = () =>
       testAvatarContract.execTransactionFromModule(
@@ -67,8 +68,9 @@ describe('encodeSingle', () => {
       type: TransactionType.transferFunds,
       token: testToken.address,
       to: recipient.address,
-      amount: BigNumber.from(10).pow(18).toString(),
+      amount: '1',
       id: '',
+      decimals: 18,
     })
 
     const exec = () =>
