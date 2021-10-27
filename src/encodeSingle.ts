@@ -1,6 +1,5 @@
 import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
 import { parseEther, parseUnits } from '@ethersproject/units'
-import { BigNumber } from 'ethers'
 
 import {
   CallContractTransactionInput,
@@ -46,7 +45,7 @@ const encodeFunctionCall = (tx: CallContractTransactionInput) => {
 export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
   switch (tx.type) {
     case TransactionType.transferFunds:
-      if (tx.token === null) {
+      if (!tx.token) {
         // transfer ETH
         return {
           to: tx.to,

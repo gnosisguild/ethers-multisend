@@ -69,7 +69,7 @@ Creates an empty transaction input of the specified type.
 isValid(transactionInput: TransactionInput): boolean
 ```
 
-Returns whether the provided transaction input can be encoded into a meta transaction without errors.
+Returns whether the provided transaction input can be encoded into a meta transaction without errors and has a valid `to` address.
 
 ## Types
 

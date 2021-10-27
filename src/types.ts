@@ -24,7 +24,7 @@ export interface CallContractTransactionInput {
 export interface TransferFundsTransactionInput {
   type: TransactionType.transferFunds
   id: string // not relevant for encoding the final transaction
-  token: string | null // ERC20 token contract address, `null` for ETH
+  token: string | null // ERC20 token contract address, `null` or empty string for ETH
   to: string // address of recipient
   amount: string // string representation of the value formatted with the token's decimal digits, e.g., "1.0" for 1 ETH
   decimals: number // decimal places of the token
