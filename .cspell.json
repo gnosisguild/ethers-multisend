@@ -15,6 +15,12 @@
     "package.json",
     "yarn.lock",
     "tsconfig.json",
-    "node_modules/**"
+    "hardhat.config.ts",
+    "node_modules/**",
+    "test/contracts/**",
+    "artifacts/**",
+    "cache/**",
+    "build/**",
+    "typechain/**"
   ]
 }

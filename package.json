@@ -18,7 +18,7 @@
     "check": "yarn check:prettier && yarn check:lint && yarn check:spelling",
     "check:lint": "eslint src test --ext .ts",
     "check:prettier": "prettier \"src/**/*.ts\" --list-different",
-    "check:spelling": "cspell \"{README.md,.github/*.md,src/**/*.ts}\"",
+    "check:spelling": "cspell \"**\"",
     "fix": "yarn fix:prettier && yarn fix:lint",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
