@@ -1,3 +1,4 @@
+import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
 import { BigNumber, formatFixed } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 
@@ -11,9 +12,8 @@ import { MetaTransaction, TransactionInput, TransactionType } from './types'
 
 export const decodeSingle = (
   transaction: MetaTransaction,
-  id = ''
-  // abi?: string
-  // decimals?: number
+  id = '',
+  { abi, decimals = 18 }: { abi?: string; decimals?: number } = {}
 ): TransactionInput => {
   const { to, data, value } = transaction
 
@@ -40,8 +40,6 @@ export const decodeSingle = (
   }
 
   if (erc20TransferData && BigNumber.from(value).eq(0)) {
-    console.log(erc20TransferData)
-    const decimals = 18 // TODO
     return {
       type: TransactionType.transferFunds,
       id,
@@ -73,9 +71,22 @@ export const decodeSingle = (
     }
   }
 
-  // if(abi) {
+  if (abi) {
+    const iface = new Interface(abi)
+    const fragment = iface.getFunction(data.substring(0, 10).toLowerCase())
 
-  // }
+    if (fragment) {
+      return {
+        type: TransactionType.callContract,
+        id,
+        to,
+        abi,
+        functionSignature: fragment.format(),
+        inputValues: decodeArgs(data, fragment.inputs),
+        value: BigNumber.from(value || '0').toString(),
+      }
+    }
+  }
 
   return {
     type: TransactionType.raw,
@@ -84,4 +95,28 @@ export const decodeSingle = (
     value,
     data,
   }
+}
+
+// we slightly adjust ethers' default coerce function so we return BigNumbers as strings.
+const abiCoder = new AbiCoder((name: string, value: unknown) => {
+  if (!BigNumber.isBigNumber(value)) return value
+
+  // Return as number if not too big.
+  // (This is replicating the ethers' default coerce function.)
+  const match = name.match('^u?int([0-9]+)$')
+  if (match && parseInt(match[1]) <= 48) {
+    return value.toNumber()
+  }
+
+  return value.toString()
+})
+
+const decodeArgs = (data: string, inputs: ParamType[]) => {
+  const result = abiCoder.decode(inputs, '0x' + data.substring(10))
+
+  const keys = Object.keys(result)
+  const namedKeys = keys.filter((key) => `${parseInt(key)}` !== key)
+  const allArgsHaveNames = namedKeys.length * 2 === keys.length
+  const keysToUse = allArgsHaveNames ? namedKeys : keys
+  return Object.assign({}, ...keysToUse.map((key) => ({ [key]: result[key] })))
 }
