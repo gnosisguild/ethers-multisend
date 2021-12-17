@@ -2,6 +2,12 @@ import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
 import { parseEther, parseUnits } from '@ethersproject/units'
 
 import {
+  erc20Interface,
+  erc20TransferFragment,
+  erc721Interface,
+  erc721TransferFragment,
+} from './interfaces'
+import {
   CallContractTransactionInput,
   MetaTransaction,
   TransactionInput,
@@ -10,25 +16,18 @@ import {
   TransferFundsTransactionInput,
 } from './types'
 
-const erc20Interface = new Interface([
-  'function transfer(address recipient, uint256 amount) public returns (bool)',
-])
-
 const encodeErc20Transfer = (tx: TransferFundsTransactionInput) =>
-  erc20Interface.encodeFunctionData('transfer(address,uint256)', [
+  erc20Interface.encodeFunctionData(erc20TransferFragment, [
     tx.to,
     parseUnits(tx.amount, tx.decimals),
   ])
 
-const erc721Interface = new Interface([
-  'function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable',
-])
-
 const encodeErc721Transfer = (tx: TransferCollectibleTransactionInput) =>
-  erc721Interface.encodeFunctionData(
-    'safeTransferFrom(address,address,uint256)',
-    [tx.from, tx.to, tx.tokenId]
-  )
+  erc721Interface.encodeFunctionData(erc721TransferFragment, [
+    tx.from,
+    tx.to,
+    tx.tokenId,
+  ])
 
 const abiCoder = new AbiCoder()
 const defaultValue = (paramType: ParamType) =>
