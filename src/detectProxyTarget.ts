@@ -20,15 +20,18 @@ const OPEN_ZEPPELIN_IMPLEMENTATION_SLOT =
 const EIP_1822_LOGIC_SLOT =
   '0xc5f16f0fcc639fa48a6947836d9850f504798523bf8c9a3a87d5876cf622bcf7'
 
-const eip1197BeaconInterface = new Interface([
+const EIP_1167_BEACON_INTERFACE = new Interface([
   'function implementation() view returns (address)',
 
   // some implementations use this over the standard method name so that the beacon contract is not detected as an EIP-897 proxy itself
   'function childImplementation() view returns (address)',
 ])
-const eip897Interface = eip1197BeaconInterface
 
-const gnosisSafeProxy = new Interface([
+const EIP_897_INTERFACE = new Interface([
+  'function implementation() view returns (address)',
+])
+
+const GNOSIS_SAFE_PROXY_INTERFACE = new Interface([
   'function masterCopy() view returns (address)',
 ])
 
@@ -50,7 +53,7 @@ export const detectProxyTarget = (
       .then((beaconAddress) => {
         const contract = new Contract(
           beaconAddress,
-          eip1197BeaconInterface,
+          EIP_1167_BEACON_INTERFACE,
           provider
         )
         return contract
@@ -76,12 +79,12 @@ export const detectProxyTarget = (
       .then(readAddress),
 
     // EIP-897 DelegateProxy pattern
-    new Contract(proxyAddress, eip897Interface, provider)
+    new Contract(proxyAddress, EIP_897_INTERFACE, provider)
       .implementation({ blockTag })
       .then(readAddress),
 
-    // GnosisSafeProxy has a masterCopy() read function
-    new Contract(proxyAddress, gnosisSafeProxy, provider)
+    // GnosisSafeProxy contract
+    new Contract(proxyAddress, GNOSIS_SAFE_PROXY_INTERFACE, provider)
       .masterCopy({ blockTag })
       .then(readAddress),
   ]).catch(() => null)
