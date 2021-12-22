@@ -1,10 +1,6 @@
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
-import dotenv from 'dotenv'
-
-// Load environment variables.
-dotenv.config()
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more

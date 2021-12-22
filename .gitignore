@@ -4,5 +4,6 @@ coverage
 cache
 artifacts
 typechain
+.env
 
 *.log
