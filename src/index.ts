@@ -1,5 +1,7 @@
 export { encodeMulti } from './encodeMulti'
+export { decodeMulti } from './decodeMulti'
 export { encodeSingle } from './encodeSingle'
+export { decodeSingle } from './decodeSingle'
 export { createTransaction } from './createTransaction'
 export { isValid } from './isValid'
 export * from './types'
