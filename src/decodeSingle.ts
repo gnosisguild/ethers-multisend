@@ -1,5 +1,7 @@
 import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
+import { Provider } from '@ethersproject/abstract-provider'
 import { BigNumber, formatFixed } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
 import { formatEther } from '@ethersproject/units'
 
 import {
@@ -10,11 +12,14 @@ import {
 } from './interfaces'
 import { MetaTransaction, TransactionInput, TransactionType } from './types'
 
-export const decodeSingle = (
+type AbiFetchFn = (contractAddress: string) => Promise<string | undefined>
+
+export const decodeSingle = async (
   transaction: MetaTransaction,
-  id = '',
-  { abi, decimals = 18 }: { abi?: string; decimals?: number } = {}
-): TransactionInput => {
+  provider: Provider,
+  fetchAbi?: AbiFetchFn,
+  id = ''
+): Promise<TransactionInput> => {
   const { to, data, value } = transaction
 
   if (!data || data === '0x') {
@@ -40,6 +45,7 @@ export const decodeSingle = (
   }
 
   if (erc20TransferData && BigNumber.from(value).eq(0)) {
+    const decimals = await new Contract(to, erc20Interface, provider).decimals()
     return {
       type: TransactionType.transferFunds,
       id,
@@ -68,6 +74,16 @@ export const decodeSingle = (
       to: erc721TransferData._to,
       tokenId: erc721TransferData._tokenId.toString(),
       address: to,
+    }
+  }
+
+  // try to fetch the ABI
+  let abi = ''
+  if (fetchAbi) {
+    try {
+      abi = (await fetchAbi(to)) || ''
+    } catch (e) {
+      // could not fetch ABI
     }
   }
 
