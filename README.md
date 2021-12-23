@@ -55,6 +55,28 @@ encodeMulti(metaTransaction: MetaTransaction[]): MetaTransaction
 
 Batches a set of meta transactions into a single multi-send contract call.
 
+## decodeSingle
+
+```ts
+decodeSingle(
+  metaTransaction: MetaTransaction,
+  provider: Provider,
+  fetchAbi?: (address: string) => Promise<string | undefined>,
+  id?: string
+): Promise<TransactionInput>
+```
+
+Decodes a meta transaction and returns a transaction input object of one of the four supported types.
+It needs an ethers provider instance to fetch decimals for ERC20 token transfers, and a function for fetching the ABI for a contract address.
+
+## decodeMulti
+
+```ts
+decodeMulti(data: string): MetaTransaction[]
+```
+
+Given the data string of a multi-send transaction, returns an array of the included meta transactions.
+
 ## createTransaction
 
 ```ts

@@ -38,7 +38,6 @@
     "@typescript-eslint/parser": "^4.31.2",
     "chai": "^4.2.0",
     "cspell": "^5.10.1",
-    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
@@ -60,7 +59,11 @@
   ],
   "dependencies": {
     "@ethersproject/abi": "^5.0.0",
+    "@ethersproject/abstract-provider": "^5.5.1",
+    "@ethersproject/address": "^5.0.0",
+    "@ethersproject/bignumber": "^5.0.0",
     "@ethersproject/bytes": "^5.0.0",
+    "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/solidity": "^5.0.0",
     "@ethersproject/units": "^5.0.0"
   }
