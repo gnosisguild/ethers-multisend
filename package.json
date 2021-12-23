@@ -22,8 +22,8 @@
     "fix": "yarn fix:prettier && yarn fix:lint",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
-    "test": "env-cmd hardhat test",
-    "test:watch": "env-cmd mocha -w"
+    "test": "hardhat test",
+    "test:watch": "mocha -w"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
@@ -38,7 +38,6 @@
     "@typescript-eslint/parser": "^4.31.2",
     "chai": "^4.2.0",
     "cspell": "^5.10.1",
-    "env-cmd": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
