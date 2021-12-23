@@ -6,12 +6,9 @@
     "bignumber",
     "delegatecall",
     "ethersproject",
-    "keccak",
     "multisend",
     "Numberish",
-    "PROXIABLE",
-    "typechain",
-    "zeppelinos"
+    "typechain"
   ],
   "flagWords": [],
   "ignorePaths": [
