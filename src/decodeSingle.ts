@@ -89,7 +89,12 @@ export const decodeSingle = async (
 
   if (abi) {
     const iface = new Interface(abi)
-    const fragment = iface.getFunction(data.substring(0, 10).toLowerCase())
+    let fragment
+    try {
+      fragment = iface.getFunction(data.substring(0, 10).toLowerCase())
+    } catch (e) {
+      console.warn(e)
+    }
 
     if (fragment) {
       return {
