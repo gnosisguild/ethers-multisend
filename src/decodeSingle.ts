@@ -96,7 +96,7 @@ export const decodeSingle = async (
     try {
       fragment = iface.getFunction(data.substring(0, 10).toLowerCase())
     } catch (e) {
-      console.warn(e)
+      // ignore error if fragment is not found in abi
     }
 
     if (fragment) {
