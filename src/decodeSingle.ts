@@ -12,7 +12,10 @@ import {
 } from './interfaces'
 import { MetaTransaction, TransactionInput, TransactionType } from './types'
 
-type AbiFetchFn = (contractAddress: string) => Promise<string | undefined>
+type AbiFetchFn = (
+  contractAddress: string,
+  transactionData: string
+) => Promise<string | undefined>
 
 export const decodeSingle = async (
   transaction: MetaTransaction,
@@ -81,7 +84,7 @@ export const decodeSingle = async (
   let abi = ''
   if (fetchAbi) {
     try {
-      abi = (await fetchAbi(to)) || ''
+      abi = (await fetchAbi(to, data)) || ''
     } catch (e) {
       // could not fetch ABI
     }
