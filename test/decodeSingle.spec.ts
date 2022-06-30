@@ -146,6 +146,27 @@ describe('decodeSingle', () => {
     })
   })
 
+  it('should return a raw transaction if the function sighash is not found in the ABI', async () => {
+    const InputsLoggerContract = await ethers.getContractFactory('InputsLogger')
+    const abi = InputsLoggerContract.interface.format(
+      FormatTypes.json
+    ) as string
+
+    const fetchAbi = async () => await abi
+
+    const data = await decodeSingle(
+      {
+        to: '0x36F4BFC9f49Dc5D4b2d10c4a48a6b30128BD79bC',
+        value: '0',
+        data: '0x095ea7b3',
+      },
+      provider,
+      fetchAbi
+    )
+
+    expect(data.type).to.equal('raw')
+  })
+
   it('should return a raw transaction if no fetchAbi function is passed', async () => {
     const InputsLoggerContract = await ethers.getContractFactory('InputsLogger')
     const data = InputsLoggerContract.interface.encodeFunctionData(
