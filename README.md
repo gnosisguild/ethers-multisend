@@ -1,5 +1,8 @@
 # ethers-multisend
 
+[![Build Status](https://github.com/gnosis/ethers-multisend/workflows/ci.yml/badge.svg?branch=master)](https://github.com/gnosis/ethers-multisend/actions?branch=master)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://github.com/gnosis/CODE_OF_CONDUCT)
+
 An npm package for crafting multi-send transaction from a Gnosis Safe, based on ethers.js.
 
 ## Features
