@@ -107,7 +107,7 @@ export const decodeSingle = async (
         abi,
         functionSignature: fragment.format(),
         inputValues: decodeArgs(data, fragment.inputs),
-        value: BigNumber.from(value || '0').toString(),
+        value: BigNumber.from(value || '0x0').toString(),
       }
     }
   }
@@ -116,7 +116,7 @@ export const decodeSingle = async (
     type: TransactionType.raw,
     id,
     to,
-    value,
+    value: BigNumber.from(value || '0x0').toString(),
     data,
   }
 }

@@ -15,7 +15,7 @@ describe('decodeSingle', () => {
       {
         operation: 0,
         to: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-        value: BigNumber.from(10).pow(18).toString(),
+        value: BigNumber.from(10).pow(18).toHexString(),
         data: '0x',
       },
       provider
@@ -42,7 +42,7 @@ describe('decodeSingle', () => {
       {
         operation: 0,
         to: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-        value: '0',
+        value: '0x0',
         data: ercTransferData,
       },
       provider
@@ -187,7 +187,7 @@ describe('decodeSingle', () => {
     const result = await decodeSingle(
       {
         to: '0x36F4BFC9f49Dc5D4b2d10c4a48a6b30128BD79bC',
-        value: '0',
+        value: '0x0',
         data,
       },
       provider
@@ -206,7 +206,7 @@ describe('decodeSingle', () => {
       {
         operation: 0,
         to: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-        value: BigNumber.from(10).pow(18).toString(),
+        value: BigNumber.from(10).pow(18).toHexString(),
         data: '0x',
       },
       provider,
@@ -214,5 +214,17 @@ describe('decodeSingle', () => {
       'myId'
     )
     expect(txInput.id).to.equal('myId')
+  })
+
+  it('should decode the value to decimal', async () => {
+    const result = await decodeSingle(
+      {
+        to: '0x36F4BFC9f49Dc5D4b2d10c4a48a6b30128BD79bC',
+        value: '0xFF',
+        data: '0x012345678',
+      },
+      provider
+    )
+    expect(result).to.have.property('value', '255')
   })
 })

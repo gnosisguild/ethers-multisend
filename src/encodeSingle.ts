@@ -1,4 +1,5 @@
 import { AbiCoder, Interface, ParamType } from '@ethersproject/abi'
+import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther, parseUnits } from '@ethersproject/units'
 
 import {
@@ -48,7 +49,7 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
         // transfer ETH
         return {
           to: tx.to,
-          value: parseEther(tx.amount).toString(),
+          value: parseEther(tx.amount).toHexString(),
           data: '0x',
         }
       } else {
@@ -68,13 +69,13 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
     case TransactionType.callContract:
       return {
         to: tx.to,
-        value: tx.value || '0x0',
+        value: BigNumber.from(tx.value || '0x0').toHexString(),
         data: encodeFunctionCall(tx),
       }
     case TransactionType.raw:
       return {
         to: tx.to,
-        value: tx.value || '0x0',
+        value: BigNumber.from(tx.value || '0x0').toHexString(),
         data: tx.data || '0x',
       }
   }

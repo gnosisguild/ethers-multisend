@@ -185,4 +185,16 @@ describe('encodeSingle', () => {
       BigNumber.from(10).pow(18)
     )
   })
+
+  it('should encode value in hex', () => {
+    expect(
+      encodeSingle({
+        type: TransactionType.raw,
+        to: testToken.address,
+        value: '',
+        data: '0x0',
+        id: '',
+      }).value
+    ).to.equal('0x00')
+  })
 })
