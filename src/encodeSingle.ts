@@ -55,26 +55,26 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
         // transfer ERC20 token
         return {
           to: tx.token,
-          value: '0',
+          value: '0x0',
           data: encodeErc20Transfer(tx),
         }
       }
     case TransactionType.transferCollectible:
       return {
         to: tx.address,
-        value: '0',
+        value: '0x0',
         data: encodeErc721Transfer(tx),
       }
     case TransactionType.callContract:
       return {
         to: tx.to,
-        value: tx.value || '0',
+        value: tx.value || '0x0',
         data: encodeFunctionCall(tx),
       }
     case TransactionType.raw:
       return {
         to: tx.to,
-        value: tx.value || '0',
+        value: tx.value || '0x0',
         data: tx.data || '0x',
       }
   }
