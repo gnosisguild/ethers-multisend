@@ -39,12 +39,12 @@ describe('encodeMulti', () => {
         {
           to: firstRecipient.address,
           value: BigNumber.from(10).pow(18).toString(),
-          data: '0x',
+          data: '0x00',
         },
         {
           to: secondRecipient.address,
           value: BigNumber.from(10).pow(18).mul(2).toString(),
-          data: '0x',
+          data: '0x00',
         },
       ],
       multiSendContract.address
@@ -111,7 +111,7 @@ describe('encodeMulti', () => {
         {
           to: firstRecipient.address,
           value: BigNumber.from(10).pow(18).toString(),
-          data: '0x',
+          data: '0x00',
         },
       ],
       multiSendContract.address
@@ -128,7 +128,7 @@ describe('encodeMulti', () => {
         {
           to: secondRecipient.address,
           value: BigNumber.from(10).pow(18).mul(2).toString(),
-          data: '0x',
+          data: '0x00',
         },
       ],
       multiSendContract.address

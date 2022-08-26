@@ -16,7 +16,7 @@ describe('decodeSingle', () => {
         operation: 0,
         to: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
         value: BigNumber.from(10).pow(18).toHexString(),
-        data: '0x',
+        data: '0x00',
       },
       provider
     )
@@ -42,7 +42,7 @@ describe('decodeSingle', () => {
       {
         operation: 0,
         to: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-        value: '0x0',
+        value: '0x00',
         data: ercTransferData,
       },
       provider
@@ -104,7 +104,7 @@ describe('decodeSingle', () => {
           ['1', '2'],
           ['3', '4'],
         ],
-        [hexZeroPad('0x0', 8), true],
+        [hexZeroPad('0x00', 8), true],
       ]
     )
     const abi = InputsLoggerContract.interface.format(
@@ -181,13 +181,13 @@ describe('decodeSingle', () => {
           ['1', '2'],
           ['3', '4'],
         ],
-        [hexZeroPad('0x0', 8), true],
+        [hexZeroPad('0x00', 8), true],
       ]
     )
     const result = await decodeSingle(
       {
         to: '0x36F4BFC9f49Dc5D4b2d10c4a48a6b30128BD79bC',
-        value: '0x0',
+        value: '0x00',
         data,
       },
       provider
@@ -207,7 +207,7 @@ describe('decodeSingle', () => {
         operation: 0,
         to: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
         value: BigNumber.from(10).pow(18).toHexString(),
-        data: '0x',
+        data: '0x00',
       },
       provider,
       undefined,

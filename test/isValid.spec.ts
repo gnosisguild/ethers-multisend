@@ -17,7 +17,7 @@ describe('isValid', () => {
   it('should return true only if the `to` field is a valid address', () => {
     const txWithEmptyTo = {
       ...createTransaction(TransactionType.raw),
-      data: '0x0',
+      data: '0x00',
     }
     expect(isValid(txWithEmptyTo)).to.equal(false)
     expect(

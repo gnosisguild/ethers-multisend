@@ -50,33 +50,33 @@ export const encodeSingle = (tx: TransactionInput): MetaTransaction => {
         return {
           to: tx.to,
           value: parseEther(tx.amount).toHexString(),
-          data: '0x',
+          data: '0x00',
         }
       } else {
         // transfer ERC20 token
         return {
           to: tx.token,
-          value: '0x0',
+          value: '0x00',
           data: encodeErc20Transfer(tx),
         }
       }
     case TransactionType.transferCollectible:
       return {
         to: tx.address,
-        value: '0x0',
+        value: '0x00',
         data: encodeErc721Transfer(tx),
       }
     case TransactionType.callContract:
       return {
         to: tx.to,
-        value: BigNumber.from(tx.value || '0x0').toHexString(),
+        value: BigNumber.from(tx.value || '0x00').toHexString(),
         data: encodeFunctionCall(tx),
       }
     case TransactionType.raw:
       return {
         to: tx.to,
-        value: BigNumber.from(tx.value || '0x0').toHexString(),
-        data: tx.data || '0x',
+        value: BigNumber.from(tx.value || '0x00').toHexString(),
+        data: tx.data || '0x00',
       }
   }
 }
