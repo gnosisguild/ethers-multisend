@@ -123,7 +123,7 @@ describe('encodeSingle', () => {
           ['1', '2'],
           ['3', '4'],
         ],
-        tupleParam: { bytesMember: hexZeroPad('0x0', 8), boolMember: true },
+        tupleParam: { bytesMember: hexZeroPad('0x00', 8), boolMember: true },
       },
       id: '',
     })
@@ -184,5 +184,17 @@ describe('encodeSingle', () => {
       recipient,
       BigNumber.from(10).pow(18)
     )
+  })
+
+  it('should encode value in hex', () => {
+    expect(
+      encodeSingle({
+        type: TransactionType.raw,
+        to: testToken.address,
+        value: '',
+        data: '0x00',
+        id: '',
+      }).value
+    ).to.equal('0x00')
   })
 })

@@ -15,7 +15,7 @@ const unpack = (packed: string, startIndex: number) => {
   // then comes the uint256 value (= 64 hex digits)
   const value = BigNumber.from(
     `0x${packed.substring(startIndex + 42, startIndex + 106)}`
-  ).toString()
+  ).toHexString()
 
   // and the uint256 data length (= 64 hex digits)
   const hexDataLength = parseInt(

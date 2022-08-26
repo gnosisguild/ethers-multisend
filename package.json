@@ -22,6 +22,7 @@
     "fix": "yarn fix:prettier && yarn fix:lint",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
+    "pretest": "hardhat compile",
     "test": "hardhat test",
     "test:watch": "mocha -w"
   },

@@ -45,7 +45,7 @@ export const encodeMulti = (
   return {
     operation: OperationType.DelegateCall,
     to: multiSendContractAddress || MULTI_SEND_CONTRACT_ADDRESS,
-    value: '0',
+    value: '0x00',
     data,
   }
 }

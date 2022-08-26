@@ -25,7 +25,7 @@ export const decodeSingle = async (
 ): Promise<TransactionInput> => {
   const { to, data, value } = transaction
 
-  if (!data || data === '0x') {
+  if (!data || BigNumber.from(data).isZero()) {
     // ETH transfer
     return {
       type: TransactionType.transferFunds,
@@ -47,7 +47,7 @@ export const decodeSingle = async (
     // it's not an ERC20 transfer
   }
 
-  if (erc20TransferData && BigNumber.from(value).eq(0)) {
+  if (erc20TransferData && BigNumber.from(value).isZero()) {
     const decimals = await new Contract(to, erc20Interface, provider).decimals()
     return {
       type: TransactionType.transferFunds,
@@ -69,7 +69,7 @@ export const decodeSingle = async (
     // it's not an ERC721 transfer
   }
 
-  if (erc721TransferData && BigNumber.from(value).eq(0)) {
+  if (erc721TransferData && BigNumber.from(value).isZero()) {
     return {
       type: TransactionType.transferCollectible,
       id,
@@ -107,7 +107,7 @@ export const decodeSingle = async (
         abi,
         functionSignature: fragment.format(),
         inputValues: decodeArgs(data, fragment.inputs),
-        value: BigNumber.from(value || '0').toString(),
+        value: BigNumber.from(value || '0x00').toString(),
       }
     }
   }
@@ -116,7 +116,7 @@ export const decodeSingle = async (
     type: TransactionType.raw,
     id,
     to,
-    value,
+    value: BigNumber.from(value || '0x00').toString(),
     data,
   }
 }
