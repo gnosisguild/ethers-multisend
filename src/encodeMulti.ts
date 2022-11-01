@@ -5,7 +5,7 @@ import { pack } from '@ethersproject/solidity'
 import { MetaTransaction, OperationType } from './types'
 
 export const MULTI_SEND_ABI = ['function multiSend(bytes memory transactions)']
-const MULTI_SEND_CONTRACT_ADDRESS = '0x8D29bE29923b68abfDD21e541b9374737B49cdAD'
+const MULTI_SEND_CONTRACT_ADDRESS = '0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761'
 
 /// Encodes the transaction as packed bytes of:
 /// - `operation` as a `uint8` with `0` for a `call` or `1` for a `delegatecall` (=> 1 byte),
