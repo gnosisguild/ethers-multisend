@@ -53,7 +53,7 @@ Encodes a single transaction input and turns into an format that is ready for ex
 ## encodeMulti
 
 ```ts
-encodeMulti(metaTransaction: MetaTransaction[]): MetaTransaction
+encodeMulti(metaTransaction: MetaTransaction[], multiSendContractAddress?: string): MetaTransaction
 ```
 
 Batches a set of meta transactions into a single multi-send contract call.
