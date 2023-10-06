@@ -130,18 +130,18 @@ describe('decodeSingle', () => {
       abi,
       functionSignature:
         'logInputs(string,address[2],int256[][],(bytes8,bool))',
-      inputValues: {
-        stringParam: 'test',
-        fixedSizeAddressArrayParam: [
+      inputValues: [
+        'test',
+        [
           '0xfF6D102f7A5b52B6A2b654a048b0bA650bE90c59',
           '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
         ],
-        int2DArrayParam: [
+        [
           ['1', '2'],
           ['3', '4'],
         ],
-        tupleParam: ['0x0000000000000000', true],
-      },
+        ['0x0000000000000000', true],
+      ],
       value: '0',
     })
   })

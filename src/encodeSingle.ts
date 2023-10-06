@@ -37,7 +37,7 @@ const defaultValue = (paramType: ParamType) =>
 const encodeFunctionCall = (tx: CallContractTransactionInput) => {
   const iface = new Interface(tx.abi)
   const values = iface.functions[tx.functionSignature].inputs.map(
-    (input) => tx.inputValues[input.name] || defaultValue(input)
+    (input, index) => tx.inputValues[index] || defaultValue(input)
   )
   return iface.encodeFunctionData(tx.functionSignature, values)
 }
