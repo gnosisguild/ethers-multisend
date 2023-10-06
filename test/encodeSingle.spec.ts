@@ -116,15 +116,15 @@ describe('encodeSingle', () => {
       value: '',
       functionSignature:
         'logInputs(string,address[2],int256[][],(bytes8,bool))',
-      inputValues: {
-        stringParam: 'test',
-        fixedSizeAddressArrayParam: [testToken.address, testNft.address],
-        int2DArrayParam: [
+      inputValues: [
+        'test',
+        [testToken.address, testNft.address],
+        [
           ['1', '2'],
           ['3', '4'],
         ],
-        tupleParam: { bytesMember: hexZeroPad('0x00', 8), boolMember: true },
-      },
+        { bytesMember: hexZeroPad('0x00', 8), boolMember: true },
+      ],
       id: '',
     })
 
@@ -145,7 +145,7 @@ describe('encodeSingle', () => {
       abi: inputsLogger.interface.format(FormatTypes.json) as string,
       value: '',
       functionSignature: 'logInputs(string,address[2])',
-      inputValues: {},
+      inputValues: [],
       id: '',
     })
 

@@ -18,7 +18,7 @@ export interface CallContractTransactionInput {
   value: string // amount of wei to send
   abi: string // ABI as JSON string
   functionSignature: string
-  inputValues: { [key: string]: ValueType }
+  inputValues: ValueType[]
 }
 
 export interface TransferFundsTransactionInput {

@@ -137,10 +137,5 @@ const abiCoder = new AbiCoder((name: string, value: unknown) => {
 
 const decodeArgs = (data: string, inputs: ParamType[]) => {
   const result = abiCoder.decode(inputs, '0x' + data.substring(10))
-
-  const keys = Object.keys(result)
-  const namedKeys = keys.filter((key) => `${parseInt(key)}` !== key)
-  const allArgsHaveNames = namedKeys.length * 2 === keys.length
-  const keysToUse = allArgsHaveNames ? namedKeys : keys
-  return Object.assign({}, ...keysToUse.map((key) => ({ [key]: result[key] })))
+  return [...result] // turn result (array with named keys) into a plain array
 }
