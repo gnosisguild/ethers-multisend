@@ -31,7 +31,6 @@ const remove0x = (hexString: string) => hexString.substr(2)
 
 // Encodes a batch of module transactions into a single multiSend module transaction.
 // A module transaction is an object with fields corresponding to a Gnosis Safe's (i.e., Zodiac IAvatar's) `execTransactionFromModule` method parameters.
-// For more information refer to https://docs.gnosis.io/safe/docs/contracts_details/#gnosis-safe-transactions.
 export const encodeMulti = (
   transactions: readonly MetaTransaction[],
   multiSendContractAddress: string = transactions.some(

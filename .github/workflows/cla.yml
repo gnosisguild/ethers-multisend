@@ -1,4 +1,4 @@
-name: "CLA Assistant"
+name: 'CLA Assistant'
 on:
   issue_comment:
     types: [created]
@@ -9,7 +9,7 @@ jobs:
   CLAssistant:
     runs-on: ubuntu-latest
     steps:
-      - name: "CLA Assistant"
+      - name: 'CLA Assistant'
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         # Beta Release
         uses: cla-assistant/github-action@v2.1.3-beta
@@ -18,10 +18,10 @@ jobs:
           # the below token should have repo scope and must be manually added by you in the repository's secret
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
-          path-to-signatures: "signatures/version1/cla.json"
-          path-to-document: "https://github.com/gnosis/CLA"
+          path-to-signatures: 'signatures/version1/cla.json'
+          path-to-document: 'https://github.com/gnosisguild/CLA'
           # branch should not be protected
-          branch: "cla-signatures"
+          branch: 'cla-signatures'
           allowlist: auryn-macmillan, nginnever, cristovaoth, jfschwarz, *bot # may need to update this expression if we add new bots
 
 

@@ -1,9 +1,9 @@
 # ethers-multisend
 
-[![Build Status](https://github.com/gnosis/ethers-multisend/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/ethers-multisend/actions/workflows/ci.yml)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://github.com/gnosis/CODE_OF_CONDUCT)
+[![Build Status](https://github.com/gnosisguild/ethers-multisend/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosisguild/ethers-multisend/actions/workflows/ci.yml)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://github.com/gnosisguild/CODE_OF_CONDUCT)
 
-An npm package for crafting multi-send transaction from a Gnosis Safe, based on ethers.js.
+An npm package for crafting multi-send transaction from a Safe, based on ethers.js v5.
 
 ## Features
 
@@ -12,19 +12,13 @@ An npm package for crafting multi-send transaction from a Gnosis Safe, based on 
   - NFT transfers
   - Contract function calls
   - Raw transactions
-- Encode a batch of transactions into a single [multi-send call](https://github.com/gnosis/safe-contracts/blob/main/contracts/libraries/MultiSend.sol).
+- Encode a batch of transactions into a single [multi-send call](https://github.com/safe-global/safe-smart-account/blob/main/contracts/libraries/MultiSend.sol).
 
 ## What to do with the encoded transaction objects?
 
 The encode functions produce JavaScript objects that can be used to actually execute the described transactions.
-There are various ways to do that:
-
-- from any enabled Safe/Zodiac module via `executeTransactionFromModule` (see: [Zodiac Module base contract](https://github.com/gnosis/zodiac/blob/master/contracts/core/Module.sol#L43))
-- directly by calling the Safe's `execTransaction` function, providing the required owner signatures ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/))
-- collecting the required signatures on-chain, by calling `approveHash` upfront ([learn more](https://docs.gnosis.io/safe/docs/contracts_tx_execution/#on-chain-approvals))
-- collecting the required signatures off-chain, by proposing the transaction using the [Safe Transaction Service](https://docs.gnosis.io/safe/docs/tutorial_tx_service_initiate_sign/)
-
-Check out the [@gnosis.pm/safe-core-sdk](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-core-sdk) package for interacting with the Gnosis Safe contracts and the [@gnosis.pm/safe-service-client](https://github.com/gnosis/safe-core-sdk/tree/main/packages/safe-service-client) package for using the Safe Transaction Service from JavaScript apps.
+There are various ways to do that, using direct calls to your Safe contract, or by relaying it using the infrastructure provided by Safe.
+Check out the Safe{Core} SDK to learn more: https://github.com/safe-global/safe-core-sdk
 
 ## Installation
 
@@ -54,12 +48,14 @@ Encodes a single transaction input and turns into an format that is ready for ex
 
 ```ts
 encodeMulti(
-  metaTransaction: MetaTransaction[], 
+  metaTransaction: MetaTransaction[],
   multiSendContractAddress?: string
 ): MetaTransaction
 ```
 
 Batches a set of meta transactions into a single multi-send contract call.
+
+You can optionally provide the `multiSendContractAddress` to use. By default, it will use [MultiSendCallOnly v1.4.1](https://github.com/safe-global/safe-deployments/blob/main/src/assets/v1.4.1/multi_send_call_only.json) or [MultiSend v1.4.1](https://github.com/safe-global/safe-deployments/blob/main/src/assets/v1.4.1/multi_send.json) if the batch includes any delegate calls.
 
 ## decodeSingle
 
