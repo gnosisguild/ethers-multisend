@@ -1,6 +1,6 @@
 {
   "name": "ethers-multisend",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A package for crafting multi-send transaction from a Zodiac Avatar, such as a Safe, based on ethers.js",
   "main": "build/cjs/index.js",
   "typings": "build/cjs/index.d.ts",
